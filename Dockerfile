@@ -23,6 +23,7 @@ RUN mkdir model
 COPY clean_data clean_data
 COPY report.Rmd .
 COPY code code
+COPY Makefile Makefile
 
 # create mounting folder
 RUN mkdir report
