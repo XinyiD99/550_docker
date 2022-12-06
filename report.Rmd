@@ -1,0 +1,121 @@
+---
+title: 'Cardiovascular Disease Analysis Report'
+author: "Xinyi Dan"
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+  pdf_document: default
+params:
+  production: yes
+  cutpoint: null
+---
+# Introduction
+
+The dataset includes 462 observations in terms of 10 variables, mainly medical data relating to medical data and cardiovascular disease, including systolic blood pressure (SBP), cumulative tobacco consumption, family history of heart disease, adiposity and overweight, age and coronary heart disease. 
+
+The analysis report includes the comparison in systolic blood pressure for individuals with and without CVD relating to age, and as represented by linear model including all the relating biomedical variables.
+
+```{r, here-i-am, include = FALSE}
+here::i_am(
+  "report.Rmd"
+)
+```
+
+
+```{r, set-chunk-opts, echo = FALSE, eval = params$production}
+library(knitr)
+opts_chunk$set(
+  echo = FALSE, warning = FALSE, message = FALSE
+)
+```
+
+```{r, load-data}
+data <- readRDS(
+  here::here("clean_data/cleaned.rds")
+)
+
+mod1 <- readRDS(
+  here::here("model/model_CHD.rds")
+)
+
+mod2 <- readRDS(
+  here::here("model/model_non_CHD.rds")
+)
+```
+
+# Descriptive Analysis
+
+## Tabular analysis
+
+Characteristics of the `r nrow(data)` variables from the CVD dataset are displayed
+in the table below.
+
+```{r, table1}
+library(table1)
+table1(~ sbp + tobacco + ldl + adiposity + famhist+ typea+obesity+alcohol+
+         age|chd, data=data,rowlabelhead="CHD_status")
+
+```
+
+## Graphical analysis
+
+Below we report scatter plots of SBP as a function of 
+age, in CHD and non-CHD group. 
+
+```{r, plot-data}
+fig.align = "center"
+out.width = "100px"
+library(ggplot2)
+
+plot=ggplot(data, aes(x = age, y = sbp)) +facet_wrap(~chd)+
+  geom_point() +
+  geom_smooth(method = lm) +
+  theme_bw()+ggtitle("SBP vs. Age, stratified by CHD")
+  
+plot
+```
+
+# Regression Analysis
+
+Below are tables of regression coefficients for models, with SBP regressed on tobacco, ldl, adiposity, obesity, alcohol, age, divided by CHD group.
+
+## CHD Patients
+
+```{r, fit-primary-model}
+table_data <- summary(mod1)$coefficients
+table_data=round(table_data,2)
+table_data[,4]=ifelse(table_data[,4]<0.01,"<0.01",table_data[,4])
+rownames(table_data)=c("$\\beta_0$","tobacco","ldl","adiposity","obesity","alcohol","age")
+# Add your code here to format table using knitr::kable
+table_data=knitr::kable(table_data, digits = 2,escape = FALSE,caption = "Regression for CHD Patients")
+table_data
+```
+## Non-CHD Participants
+```{r, fit-primary-model2}
+table_data <- summary(mod2)$coefficients
+table_data=round(table_data,2)
+table_data[,4]=ifelse(table_data[,4]<0.01,"<0.01",table_data[,4])
+rownames(table_data)=c("$\\beta_0$","tobacco","ldl","adiposity","obesity","alcohol","age")
+# Add your code here to format table using knitr::kable
+table_data=knitr::kable(table_data, digits = 2,escape = FALSE,caption = "Regression for Non-CHD Participants")
+table_data
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
