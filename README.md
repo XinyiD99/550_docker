@@ -1,3 +1,10 @@
+## To Build Docker Image
+
+Run make project_image to generate the Docker image or docker pull xdan999/project_image for the image.
+
+## To Build the Report
+
+After building the docker image, run make report/report.html to build the report on docker and synchronized to local folder "report".
 
 ------------------------------------------------------------------------
 
@@ -33,12 +40,6 @@
 The data is directed downloaded form Kaggle in code/01_data_clean.r and saved in cleaned data. Please refer to cleaned.rds for the data. 
 
 The dataset includes 462 observations in terms of 10 variables, mainly medical data relating to medical data and cardiovascular disease, including systolic blood pressure (SBP), cumulative tobacco consumption, family history of heart disease, adiposity and overweight, age and coronary heart disease.
-
-## Generate Report
-
-  - execute `make install` to load required packages.
-  - execute `make report.html` to generate the report.
-
 
 
 ------------------------------------------------------------------------
