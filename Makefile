@@ -15,4 +15,4 @@ project_image:
 
 # run the container
 report/report.html:
-	docker run -v "$$(pwd)/report":/project/report xdan999/project_image
+	docker run -v "/$$(pwd)/report":/project/report xdan999/project_image
